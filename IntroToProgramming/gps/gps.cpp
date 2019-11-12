@@ -10,6 +10,32 @@ const unsigned short TOP_Y = 2;
 const float ERROR = 1e-2;
 const float PI = 3.14;
 
+
+bool is_on_left(float x){
+
+	return x < LEFT_X - ERROR;
+}
+
+bool is_on_right(float x){
+
+	return x > RIGHT_X + ERROR;
+}
+
+bool is_above(float y){
+
+	return y > TOP_Y + ERROR;
+}
+
+bool is_beneath(float y){
+
+	return y < BOTTOM_Y - ERROR;
+}
+
+bool equal(float x, float y){
+
+	return fabs(x-y) < ERROR;
+}
+
 long double calculate_distance(float a_x, float a_y, float b_x, float b_y){
 
 
@@ -32,17 +58,17 @@ int main(){
 		float saved_b_x = b_x; // save initial value of b because it may swap with a later
 		float saved_b_y = b_y;
 
-		
+
 		//check for both points whether they are inside or outside
 		bool a_out = 0;
 		bool b_out = 0;
-		if(a_x < LEFT_X - ERROR || a_x > RIGHT_X + ERROR || a_y < BOTTOM_Y - ERROR || a_y > TOP_Y + ERROR){
+		if(is_on_left(a_x) || is_on_right(a_x) || is_beneath(a_y) || is_above(a_y)){
 
 			a_out = 1;
 
 		}
 
-		if(b_x < LEFT_X - ERROR || b_x > RIGHT_X + ERROR || b_y < BOTTOM_Y - ERROR || b_y > TOP_Y + ERROR){
+		if(is_on_left(b_x) || is_on_right(b_x) || is_beneath(b_y) || is_above(b_y)){
 
 			b_out = 1;
 		}
@@ -66,10 +92,10 @@ int main(){
 
 
 			//handle case if a and b have the same y-coordinates
-			if(fabs(a_y - b_y) < ERROR){ 
+			if(equal(a_y, b_y)){ 
 
 				double intersection_x;
-				if(b_x > RIGHT_X - ERROR){
+				if(is_on_right(b_x)){
 
 					intersection_x = RIGHT_X;
 
@@ -84,11 +110,11 @@ int main(){
 			}
 
 			//handle case if a and b have the same x-coordinates
-			else if(fabs(a_x - b_x) < ERROR){
+			else if(equal(a_x, b_x)){
 
 				double intersection_y;
 
-				if(a_y > TOP_Y - ERROR){
+				if(is_above(b_y)){
 
 					intersection_y = TOP_Y;
 				}
@@ -121,27 +147,27 @@ int main(){
 				bool on_right = 0;
 				bool on_left = 0;
 
-				if((intersection_top_x < RIGHT_X - ERROR && intersection_top_x > LEFT_X + ERROR) ||
-				  fabs(intersection_top_x - RIGHT_X) < ERROR ||
-				  fabs(intersection_top_x - LEFT_X) < ERROR){ //also check for the two corners - up, right and up, left
+				if(!is_on_right(intersection_top_x) && !is_on_left(intersection_top_x) ||
+				  equal(intersection_top_x, RIGHT_X) ||
+				  equal(intersection_top_x, LEFT_X)){ //also check for the two corners - up, right and up, left
 
 					on_top = 1;
 
 				} 
 
-				else if((intersection_bottom_x < RIGHT_X - ERROR && intersection_bottom_x > LEFT_X + ERROR) || 
-				  fabs(intersection_bottom_x - RIGHT_X) < ERROR ||
-				  fabs(intersection_bottom_x - LEFT_X) < ERROR){ //check for the other two corners - bottom, right and bottom, left
+				else if(is_on_left(intersection_bottom_x) && is_on_left(intersection_bottom_x) || 
+				  equal(intersection_bottom_x, RIGHT_X) ||
+				  equal(intersection_bottom_x, LEFT_X)){ //check for the other two corners - bottom, right and bottom, left
 
 					on_bottom = 1;
 				}
 
-				else if(intersection_left_y < TOP_Y - ERROR && intersection_left_y > BOTTOM_Y + ERROR){
+				else if(!is_above(intersection_left_y) && !is_beneath(intersection_left_y)){
 
 					on_left = 1;
 				}
 
-				else if(intersection_right_y < TOP_Y - ERROR && intersection_right_y > BOTTOM_Y + ERROR){
+				else if(!is_beneath(intersection_right_y) && !is_above(intersection_right_y)){
 
 					on_right = 1;
 				}
