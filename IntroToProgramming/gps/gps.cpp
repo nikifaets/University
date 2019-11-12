@@ -73,7 +73,7 @@ int main(){
 			b_out = 1;
 		}
 
-		if(a_out && b_out){ ; } //do nothing - program will not enter any other if-statements but need to switch
+		if(a_out && b_out){ ; } //do nothing - program will not enter any other if-statements but a needs to inherit the value of b at the end of the loop
 
 		else if(!a_out && !b_out){
 
