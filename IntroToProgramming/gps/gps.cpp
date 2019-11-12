@@ -73,7 +73,14 @@ int main(){
 			b_out = 1;
 		}
 
-		if(a_out && b_out){ ; } //do nothing - program will not enter any other if-statements but a needs to inherit the value of b at the end of the loop
+		if(a_out && b_out){
+
+			//swap points and continue without incrementing distance
+			a_x = saved_b_x;
+			a_y = saved_b_y;
+
+			continue;
+		} 
 
 		else if(!a_out && !b_out){
 
