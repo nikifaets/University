@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <iomanip>
 using namespace std;
 
 const short LEFT_X = -5;
@@ -22,18 +23,17 @@ int main(){
 	long double distance = 0;
 
 	cin >> n;
-	float a_x, a_y, b_x, b_y;
+	float a_x, a_y, b_x, b_y; 
 	cin >> a_x >> a_y;
 	for(int i=1; i<n; i++){
 
 		cin >> b_x >> b_y;
 
-		float save_b_x = b_x;
-		float save_b_y = b_y;
+		float saved_b_x = b_x; // save initial value of b because it may swap with a later
+		float saved_b_y = b_y;
 
-
-
-		//check if points are in or outside
+		
+		//check for both points whether they are inside or outside
 		bool a_out = 0;
 		bool b_out = 0;
 		if(a_x < LEFT_X - ERROR || a_x > RIGHT_X + ERROR || a_y < BOTTOM_Y - ERROR || a_y > TOP_Y + ERROR){
@@ -47,7 +47,7 @@ int main(){
 			b_out = 1;
 		}
 
-		if(a_out && b_out){ ; } 
+		if(a_out && b_out){ ; } //do nothing - program will not enter any other if-statements but need to switch
 
 		else if(!a_out && !b_out){
 
@@ -114,6 +114,8 @@ int main(){
 				double intersection_bottom_x = (BOTTOM_Y - k) / m;
 				double intersection_right_y = RIGHT_X * m + k;
 				double intersection_left_y = LEFT_X * m + k;
+
+				//chech which side does the intersection point lie on
 				bool on_top = 0;
 				bool on_bottom = 0;
 				bool on_right = 0;
@@ -121,7 +123,7 @@ int main(){
 
 				if((intersection_top_x < RIGHT_X - ERROR && intersection_top_x > LEFT_X + ERROR) ||
 				  fabs(intersection_top_x - RIGHT_X) < ERROR ||
-				  fabs(intersection_top_x - LEFT_X) < ERROR){ //also check for the two corners
+				  fabs(intersection_top_x - LEFT_X) < ERROR){ //also check for the two corners - up, right and up, left
 
 					on_top = 1;
 
@@ -129,7 +131,7 @@ int main(){
 
 				else if((intersection_bottom_x < RIGHT_X - ERROR && intersection_bottom_x > LEFT_X + ERROR) || 
 				  fabs(intersection_bottom_x - RIGHT_X) < ERROR ||
-				  fabs(intersection_bottom_x - LEFT_X) < ERROR){ //check for the other two corners
+				  fabs(intersection_bottom_x - LEFT_X) < ERROR){ //check for the other two corners - bottom, right and bottom, left
 
 					on_bottom = 1;
 				}
@@ -144,38 +146,45 @@ int main(){
 					on_right = 1;
 				}
 
+				//transform b to lie on one of the sides
+
+				float transformed_b_x = b_x;
+				float transformed_b_y = b_y;
 				if(on_top){
 
-					b_x = intersection_top_x;
-					b_y = TOP_Y; 
+					transformed_b_x = intersection_top_x;
+					transformed_b_y = TOP_Y; 
 				}
 
 				else if(on_bottom){
 
-					b_x = intersection_bottom_x;
-					b_y = BOTTOM_Y;
+					transformed_b_x = intersection_bottom_x;
+					transformed_b_y = BOTTOM_Y;
 				}
 
 				else if(on_left){
 
-					b_x = LEFT_X;
-					b_y = intersection_left_y;
+					transformed_b_x = LEFT_X;
+					transformed_b_y = intersection_left_y;
 
 				}
 
 				else if(on_right){
 
-					b_x = RIGHT_X;
-					b_y = intersection_right_y;
+					transformed_b_x = RIGHT_X;
+					transformed_b_y = intersection_right_y;
 				}
 
-				distance += calculate_distance(a_x, a_y, b_x, b_y);
+				distance += calculate_distance(a_x, a_y, transformed_b_x, transformed_b_y);
 			}
 
 		}
-		a_x = save_b_x;
-		a_y = save_b_y;
+		a_x = saved_b_x;
+		a_y = saved_b_y;
 	}
 
-	cout << distance << endl;
+	distance = floor(distance*1000);
+	distance /= 1000;
+
+	cout <<	 distance << endl;
 }
