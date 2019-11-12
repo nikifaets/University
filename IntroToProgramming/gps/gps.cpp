@@ -13,22 +13,22 @@ const float PI = 3.14;
 
 bool is_on_left(float x){
 
-	return x < LEFT_X - ERROR;
+	return x < LEFT_X;
 }
 
 bool is_on_right(float x){
 
-	return x > RIGHT_X + ERROR;
+	return x > RIGHT_X;
 }
 
 bool is_above(float y){
 
-	return y > TOP_Y + ERROR;
+	return y > TOP_Y;
 }
 
 bool is_beneath(float y){
 
-	return y < BOTTOM_Y - ERROR;
+	return y < BOTTOM_Y;
 }
 
 bool equal(float x, float y){
@@ -98,7 +98,7 @@ int main(){
 			}
 
 
-			//handle case if a and b have the same y-coordinates
+			//handle case when a and b have the same y-coordinates
 			if(equal(a_y, b_y)){ 
 
 				double intersection_x;
@@ -116,7 +116,7 @@ int main(){
 
 			}
 
-			//handle case if a and b have the same x-coordinates
+			//handle case when a and b have the same x-coordinates
 			else if(equal(a_x, b_x)){
 
 				double intersection_y;
@@ -135,7 +135,7 @@ int main(){
 
 			}
 
-			//handle case if a and b are with different x and y coordinates
+			//handle case when a and b are with different x and y coordinates
 			else{
 
 				//get line equation and find coordinates of intersections: y = mx+k
