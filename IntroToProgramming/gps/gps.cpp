@@ -10,31 +10,39 @@ const unsigned short TOP_Y = 2;
 const float ERROR = 1e-2;
 const float PI = 3.14;
 
+bool equal(float x, float y){
+
+	return fabs(x-y) < ERROR;
+}
 
 bool is_on_left(float x){
+
+	if(equal(x, LEFT_X)) return 1;
 
 	return x < LEFT_X;
 }
 
 bool is_on_right(float x){
 
+	if(equal(x, RIGHT_X)) return 1;
+
 	return x > RIGHT_X;
 }
 
 bool is_above(float y){
+
+	if(equal(y, TOP_Y)) return 1;
 
 	return y > TOP_Y;
 }
 
 bool is_beneath(float y){
 
+	if(equal(y, BOTTOM_Y)) return 1;
+
 	return y < BOTTOM_Y;
 }
 
-bool equal(float x, float y){
-
-	return fabs(x-y) < ERROR;
-}
 
 long double calculate_distance(float a_x, float a_y, float b_x, float b_y){
 
@@ -73,6 +81,7 @@ int main(){
 			b_out = 1;
 		}
 
+		//both points are outside
 		if(a_out && b_out){
 
 			//swap points and continue without incrementing distance
@@ -82,12 +91,14 @@ int main(){
 			continue;
 		} 
 
+		//both points are inside
 		else if(!a_out && !b_out){
 
 			distance += calculate_distance(a_x, a_y, b_x, b_y);
 
 		}
 
+		//just one point is outside
 		else{
 
 			// swap a and b so that always b is the point outside the rectangle
@@ -148,7 +159,7 @@ int main(){
 				double intersection_right_y = RIGHT_X * m + k;
 				double intersection_left_y = LEFT_X * m + k;
 
-				//chech which side does the intersection point lie on
+				//check which side does the intersection point lie on
 				bool on_top = 0;
 				bool on_bottom = 0;
 				bool on_right = 0;
