@@ -66,7 +66,6 @@ int main(){
 		float saved_b_x = b_x; // save initial value of b because it may swap with a later
 		float saved_b_y = b_y;
 
-		cout << a_x << " " << a_y << " and " << b_x << " " << b_y << endl; 
 
 		//check for both points whether they are inside or outside
 		bool a_out = 0;
@@ -85,7 +84,6 @@ int main(){
 		//both points are outside
 		if(a_out && b_out){
 
-			cout << "both are out" << endl;
 			//swap points and continue without incrementing distance
 			a_x = saved_b_x;
 			a_y = saved_b_y;
@@ -96,7 +94,6 @@ int main(){
 		//both points are inside
 		else if(!a_out && !b_out){
 
-			cout << "both are in" << endl;
 			distance += calculate_distance(a_x, a_y, b_x, b_y);
 
 		}
@@ -115,7 +112,6 @@ int main(){
 			//handle case when a and b have the same y-coordinates
 			if(equal(a_y, b_y)){ 
 
-				cout << "same y" << endl;
 				double intersection_x;
 				if(is_on_right(b_x)){
 
@@ -134,7 +130,6 @@ int main(){
 			//handle case when a and b have the same x-coordinates
 			else if(equal(a_x, b_x)){
 
-				cout << "same x" << endl;
 				double intersection_y;
 
 				if(is_above(b_y)){
@@ -174,7 +169,6 @@ int main(){
 				  equal(intersection_top_x, RIGHT_X) ||
 				  equal(intersection_top_x, LEFT_X)){ //also check for the two corners - up, right and up, left
 
-					cout << "on top " << endl;
 					on_top = 1;
 
 				} 
@@ -183,19 +177,16 @@ int main(){
 				  equal(intersection_bottom_x, RIGHT_X) ||
 				  equal(intersection_bottom_x, LEFT_X)){ //check for the other two corners - bottom, right and bottom, left
 
-					cout << "on bottom " << endl;
 					on_bottom = 1;
 				}
 
 				else if(!is_above(intersection_left_y) && !is_beneath(intersection_left_y) && !is_on_right(b_x)){
 
-					cout << " on left " << endl;
 					on_left = 1;
 				}
 
 				else if(!is_beneath(intersection_right_y) && !is_above(intersection_right_y) && !is_on_left(b_x)){
 
-					cout << "on right " << endl;
 					on_right = 1;
 				}
 
@@ -207,7 +198,6 @@ int main(){
 
 					transformed_b_x = intersection_top_x;
 					transformed_b_y = TOP_Y; 
-					cout << " new coordinates when point is on top: " << transformed_b_x << " " << transformed_b_y << endl;
 				}
 
 				else if(on_bottom){
@@ -227,7 +217,6 @@ int main(){
 
 					transformed_b_x = RIGHT_X;
 					transformed_b_y = intersection_right_y;
-					cout << " new coordinates when on right: " << transformed_b_x << " " << transformed_b_y << endl;
 				}
 
 				distance += calculate_distance(a_x, a_y, transformed_b_x, transformed_b_y);
