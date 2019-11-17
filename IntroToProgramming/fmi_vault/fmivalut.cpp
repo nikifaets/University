@@ -22,7 +22,7 @@ int main(){
 		unsigned long long id;
 		cin >> id;
 
-		if(id > max_id){
+		if(id >= max_id){
 
 			max_id = id;
 			ones_count += 1;
