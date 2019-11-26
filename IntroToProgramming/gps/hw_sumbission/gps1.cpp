@@ -44,7 +44,7 @@ bool is_beneath(float y){
 }
 
 
-long double calculate_distance(double a_x, double a_y, double b_x, double b_y){
+long double calculate_distance(float a_x, float a_y, float b_x, float b_y){
 
 
 	long double distance_arg = sqrt(((a_x - b_x)*(a_x - b_x) + (a_y - b_y)*(a_y - b_y)));
@@ -57,14 +57,14 @@ int main(){
 	long double distance = 0;
 
 	cin >> n;
-	double a_x, a_y, b_x, b_y; 
+	float a_x, a_y, b_x, b_y; 
 	cin >> a_x >> a_y;
 	for(int i=1; i<n; i++){
 
 		cin >> b_x >> b_y;
 
-		double saved_b_x = b_x; // save initial value of b because it may swap with a later
-		double saved_b_y = b_y;
+		float saved_b_x = b_x; // save initial value of b because it may swap with a later
+		float saved_b_y = b_y;
 
 
 		//check for both points whether they are inside or outside
@@ -191,9 +191,9 @@ int main(){
 				}
 
 				//transform b to lie on one of the sides
-				double transformed_b_x = b_x;
-				double transformed_b_y = b_y;
 
+				float transformed_b_x = b_x;
+				float transformed_b_y = b_y;
 				if(on_top){
 
 					transformed_b_x = intersection_top_x;
@@ -227,7 +227,7 @@ int main(){
 		a_y = saved_b_y;
 	}
 
-	distance = round(distance*1000);
+	distance = floor(distance*1000);
 	distance /= 1000;
 
 	cout <<	 distance << endl;
