@@ -33,7 +33,7 @@ int main(){
 
 	}
 
-	unsigned short middle = ones_count;
+	unsigned short middle = ones_count/2;
 
 	if(ones_count % 2 == 1){
 
@@ -47,7 +47,7 @@ int main(){
 
 		if( !(bitmask & (1<<i)) ){
 
-			if(n < middle){
+			if(i < middle){
 
 				zeros_count_left++;
 			}
