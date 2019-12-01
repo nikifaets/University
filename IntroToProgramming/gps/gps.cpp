@@ -7,36 +7,36 @@ const short LEFT_X = -5;
 const short BOTTOM_Y = -2;
 const unsigned short RIGHT_X = 5;
 const unsigned short TOP_Y = 2;
-const float ERROR = 1e-2;
+const double ERROR = 1e-2;
 const float PI = 3.14;
 
-bool equal(float x, float y){
+bool equal(double x, double y){
 
 	return fabs(x-y) < ERROR;
 }
 
-bool is_on_left(float x){
+bool is_on_left(double x){
 
 	if(equal(x, LEFT_X)) return 0;
 
 	return x < LEFT_X;
 }
 
-bool is_on_right(float x){
+bool is_on_right(double x){
 
 	if(equal(x, RIGHT_X)) return 0;
 
 	return x > RIGHT_X;
 }
 
-bool is_above(float y){
+bool is_above(double y){
 
 	if(equal(y, TOP_Y)) return 0;
 
 	return y > TOP_Y;
 }
 
-bool is_beneath(float y){
+bool is_beneath(double y){
 
 	if(equal(y, BOTTOM_Y)) return 0;
 
@@ -44,7 +44,7 @@ bool is_beneath(float y){
 }
 
 
-long double calculate_distance(double a_x, double a_y, double b_x, double b_y){
+double calculate_distance(double a_x, double a_y, double b_x, double b_y){
 
 
 	long double distance_arg = sqrt(((a_x - b_x)*(a_x - b_x) + (a_y - b_y)*(a_y - b_y)));
@@ -53,8 +53,9 @@ long double calculate_distance(double a_x, double a_y, double b_x, double b_y){
 }
 int main(){
 
+	//freopen("output","w",stdout);
 	unsigned long int n;
-	long double distance = 0;
+	double distance = 0;
 
 	cin >> n;
 	double a_x, a_y, b_x, b_y; 
@@ -84,6 +85,7 @@ int main(){
 		//both points are outside
 		if(a_out && b_out){
 
+			cout <<"both are out" << endl;
 			//swap points and continue without incrementing distance
 			a_x = saved_b_x;
 			a_y = saved_b_y;
@@ -94,6 +96,7 @@ int main(){
 		//both points are inside
 		else if(!a_out && !b_out){
 
+			cout << "both are in" << endl;
 			distance += calculate_distance(a_x, a_y, b_x, b_y);
 
 		}
@@ -165,27 +168,23 @@ int main(){
 				bool on_right = 0;
 				bool on_left = 0;
 
-				if((!is_on_right(intersection_top_x) && !is_on_left(intersection_top_x) && !is_beneath(b_y)) ||
-				  equal(intersection_top_x, RIGHT_X) ||
-				  equal(intersection_top_x, LEFT_X)){ //also check for the two corners - up, right and up, left
+				if((!is_on_right(intersection_top_x) && !is_on_left(intersection_top_x) && is_above(b_y))){ //also check for the two corners - up, right and up, left
 
 					on_top = 1;
 
 				} 
 
-				else if((!is_on_left(intersection_bottom_x) && !is_on_right(intersection_bottom_x) && !is_above(b_y)) || 
-				  equal(intersection_bottom_x, RIGHT_X) ||
-				  equal(intersection_bottom_x, LEFT_X)){ //check for the other two corners - bottom, right and bottom, left
+				else if((!is_on_left(intersection_bottom_x) && !is_on_right(intersection_bottom_x) && is_beneath(b_y))){ //check for the other two corners - bottom, right and bottom, left
 
 					on_bottom = 1;
 				}
 
-				else if(!is_above(intersection_left_y) && !is_beneath(intersection_left_y) && !is_on_right(b_x)){
+				else if(!is_above(intersection_left_y) && !is_beneath(intersection_left_y) && is_on_left(b_x)){
 
 					on_left = 1;
 				}
 
-				else if(!is_beneath(intersection_right_y) && !is_above(intersection_right_y) && !is_on_left(b_x)){
+				else if(!is_beneath(intersection_right_y) && !is_above(intersection_right_y) && is_on_right(b_x)){
 
 					on_right = 1;
 				}
@@ -227,8 +226,5 @@ int main(){
 		a_y = saved_b_y;
 	}
 
-	distance = round(distance*1000);
-	distance /= 1000;
-
-	cout <<	 distance << endl;
+	cout <<	fixed << setprecision(3) << distance << endl;
 }
