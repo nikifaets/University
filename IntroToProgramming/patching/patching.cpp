@@ -5,7 +5,7 @@ const unsigned short PROJ_AMOUNT = 64;
 const unsigned short CABLE_LEN = 513;
 
 const short ERR_CABLE_FULL = -1;
-const short ERR_SN_NOT_FOUND = 404; //for the meme
+const short ERR_SN_NOT_FOUND = -404; //for the meme
 const short ERR_PROJ_FAKE = -2;
 const short ERR_OUTSIDE_CABLE = -3;
 const short ERR_SN_USED = -4;
@@ -443,7 +443,7 @@ void remove_proj(unsigned int SN){
 
 void move_proj(unsigned int SN, unsigned short new_start){
 
-	unsigned short idx = find_SN(SN);
+	short idx = find_SN(SN);
 	unsigned int proj_len = projectors[idx][2];
 
 	if(idx < NO_ERRORS){
@@ -452,7 +452,7 @@ void move_proj(unsigned int SN, unsigned short new_start){
 		return;
 	}
 
-	if(projectors[idx][1] + new_start > CABLE_LEN || projector[idx][1] < 1){
+	if(projectors[idx][1] + new_start > CABLE_LEN || projectors[idx][1] < 1){
 
 		handle_error(ERR_OUTSIDE_CABLE);
 		return;
