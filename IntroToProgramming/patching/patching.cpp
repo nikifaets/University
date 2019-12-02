@@ -23,6 +23,7 @@ void move_proj(unsigned int SN, unsigned short new_start);
 void remove_proj(unsigned int SN);
 void update_region(unsigned short start, unsigned short len);
 void add_proj(unsigned int SN, unsigned short start, unsigned short len);
+void clear_duplicate(unsigned short start, unsigned short len);
 
 short SN_to_idx(unsigned int SN);
 short find_SN(unsigned int SN);
@@ -277,7 +278,13 @@ void add_proj(unsigned int SN, unsigned short start, unsigned short len){
 
 			if(cable[i][0] == STATUS_DUPLICATE || cable[i][0] == STATUS_GOOD){
 
+				if(cable[i][0] == STATUS_DUPLICATE){
+
+					clear_duplicate(start, len);
+				}
+
 				cable[i][0] = STATUS_CONFLICT;
+
 			}
 
 			else if(cable[i][0] == STATUS_EMPTY){
@@ -300,6 +307,28 @@ void add_proj(unsigned int SN, unsigned short start, unsigned short len){
 	
 }
 
+void clear_duplicate(unsigned short start, unsigned short len){
+
+	short projectors_in_range[PROJ_AMOUNT];
+	unsigned short last_idx = get_projectors_in_range(start, len, projectors_in_range);
+
+	for(int i=0; i<last_idx; i++){
+
+		unsigned short curr_idx = projectors_in_range[i];
+		unsigned short curr_start = projectors[curr_idx][1];
+		unsigned short curr_len = projectors[curr_idx][2];
+
+		for(int j=curr_start; j<curr_start+curr_len; j++){
+
+			if(cable[j][0] == STATUS_DUPLICATE){
+
+				cable[j][0] = STATUS_GOOD;
+			}
+
+		}
+	}
+
+}
 
 
 void print_state(){
