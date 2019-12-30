@@ -10,6 +10,7 @@ const char ADDRESS[2][15] = {"You", "The computer"};
 const unsigned short POS_EMPTY = 10;
 
 const unsigned short BOARD_STATUS_HIDDEN = 11;
+const unsigned short BOARD_STATUS_HIT = 12;
 
 const unsigned short CARRIER_ID = 0;
 const unsigned short BATTLESHIP_ID = 1;
@@ -24,6 +25,8 @@ const unsigned short SHIPS_AMOUNT = 5;
 
 const char SHIP_NAME[5][20] = {"Carrier", "Battleship", "Frigate", "Submarine", "Cutter"};
 const char CARDINAL[4][5] = {"1st", "2nd", "3rd", "4th"};
+
+bool AI_REFRESH = false;
 
 bool GAME_OVER = false;
 
@@ -40,6 +43,7 @@ void player_attack(unsigned short** board, unsigned short len, unsigned short** 
 void ai_attack(unsigned short** board, unsigned short len, unsigned short** history_board);
 unsigned short* ai_attack_random(unsigned short** board, unsigned short board_len, unsigned short** history_board, unsigned short* ships_left);
 unsigned short ai_hit(unsigned short** board, unsigned short board_len, unsigned short* pos);
+void ai_register_hit(unsigned short* pos, unsigned short hit, unsigned short** board, unsigned short board_len, unsigned short** history_board, unsigned short* ships_left, unsigned short shots_on_target);
 
 unsigned short get_array_len(unsigned short ship_id);
 
@@ -63,6 +67,7 @@ int main(){
 	unsigned short** computer_board = create_matrix(len, len);
 	unsigned short** player_board = create_matrix(len, len);
 	unsigned short** player_history_board = create_matrix(len,len);
+	unsigned short** computer_history_board = create_matrix(len,len);
 
 	for(int i=0; i<len; i++){
 
@@ -71,18 +76,31 @@ int main(){
 			player_board[i][j] = POS_EMPTY;
 			computer_board[i][j] = POS_EMPTY;
 			player_history_board[i][j] = BOARD_STATUS_HIDDEN;
+			computer_history_board[i][j] = BOARD_STATUS_HIDDEN;
 		}
 	}
 
 
 	fill_board(computer_board, len);
-	print_board(computer_board, len);
-	print_board(player_history_board, len);
+	player_fill_board(player_board, len);
 
-	player_fill_board_test(player_board, len);
+	while(!GAME_OVER){
 
+		player_attack(computer_board, len, player_history_board);
+		ai_attack(player_board, len, computer_history_board);
 
-	player_attack(computer_board, len, player_history_board);
+		cout << "Your board: " << endl;
+		print_board(player_board, len);
+
+		cout << "Your history of attacks " << endl;
+		print_board(player_history_board, len);
+
+	}
+
+	delete_matrix(player_board, len, len);
+	delete_matrix(player_history_board, len, len);
+	delete_matrix(computer_board, len, len);
+	delete_matrix(computer_history_board, len, len);
 
 
 }
@@ -94,6 +112,7 @@ void player_fill_board(unsigned short** board, unsigned short board_len){
 		for(int j=0; j<SHIP_AMOUNT[i]; j++){
 
 			player_input(board, board_len, i, j);
+			print_board(board, board_len);
 		}
 	}
 }
@@ -117,7 +136,6 @@ void player_input(unsigned short** board, unsigned short board_len, unsigned sho
 	if(array_fits(board, board_len, row, col, SHIP_LEN[ship_id], rotation, POS_EMPTY)){
 
 		write_array(board, board_len, row, col, rotation, ship_id);
-		print_board(board, board_len);
 	}
 
 	else{
@@ -125,6 +143,8 @@ void player_input(unsigned short** board, unsigned short board_len, unsigned sho
 		cout << "No space on the given coordinates. Try again." << endl;
 		player_input(board, board_len, ship_id, num);
 	}
+
+	delete [] input_field;
 }
 void fill_board(unsigned short** board, unsigned short board_len){
 
@@ -208,6 +228,9 @@ unsigned short* fit_array(unsigned short** board, unsigned short board_len, unsi
 	unsigned short idx = get_rand(next_fit);
 	unsigned short* res = new unsigned short[3];
 	res = positions[idx];
+
+	delete [] positions;
+
 	return res;
 
 }
@@ -367,6 +390,7 @@ void player_attack(unsigned short** board, unsigned short board_len, unsigned sh
 	static bool first = true;
 
 	static unsigned short* ships_left = new unsigned short[SHIPS_AMOUNT];
+	static unsigned short shots_on_target = 0;
 
 	if(first){
 	
@@ -384,6 +408,7 @@ void player_attack(unsigned short** board, unsigned short board_len, unsigned sh
 
 	unsigned short board_status = board[row][col];
 
+	delete [] input;
 	if(board[row][col] == POS_EMPTY){
 
 		cout << "There are no ships at the current position." << endl;
@@ -401,7 +426,15 @@ void player_attack(unsigned short** board, unsigned short board_len, unsigned sh
 
 		cout << "(" << hit+1 << " / " << SHIP_AMOUNT[ship_id] << ")" << endl; 
 
-		ships_left[ship_id] --;
+		shots_on_target ++;
+
+		if(shots_on_target == SHIP_LEN[ship_id]){
+
+			ships_left[ship_id] --;
+			cout << "You destroyed the opponent's " << CARDINAL[hit] << SHIP_NAME[ship_id] << endl;
+
+
+		}
 
 		if(ships_left[ship_id] == 0){
 
@@ -420,6 +453,7 @@ void player_attack(unsigned short** board, unsigned short board_len, unsigned sh
 
 void ai_attack(unsigned short** board, unsigned short board_len, unsigned short** history_board){
 	
+
 	static bool first = true;
 	const unsigned short STATE_ATTACK_RANDOM = 0;
 	const unsigned short STATE_DECIDE_DIRECTION = 1;
@@ -427,6 +461,13 @@ void ai_attack(unsigned short** board, unsigned short board_len, unsigned short*
 	const unsigned short STATE_ATTACK_VERTICAL = 3;
 
 	static unsigned short* ships_left = new unsigned short[SHIPS_AMOUNT];
+	static unsigned short* first_attack = new unsigned short[2];
+	static unsigned short* last_attack = new unsigned short[2];
+	static unsigned short attack_target = POS_EMPTY; 
+	static unsigned short shots_on_target = 0;
+	static unsigned short direction = 0; //0 - right; 1 - left; 2 - up; 3 - down;
+
+	static unsigned short curr_state = STATE_ATTACK_RANDOM;
 
 	if(first){
 
@@ -434,21 +475,242 @@ void ai_attack(unsigned short** board, unsigned short board_len, unsigned short*
 		first = false;
 	}
 
+	if(AI_REFRESH){
 
-	static bool target_destroyed = false;
-	static unsigned short curr_state = STATE_ATTACK_RANDOM;
+		shots_on_target = 0;
+		attack_target = POS_EMPTY;
+		curr_state = STATE_ATTACK_RANDOM;
+
+		bool all_destroyed = true;
+		for(int i=0; i<SHIPS_AMOUNT; i++){
+
+			if(ships_left[i] > 0) all_destroyed = false;
+
+		}
+
+		if(all_destroyed){
+
+			delete [] first_attack;
+			delete [] ships_left;
+			delete [] last_attack;
+
+		}
+
+	}
+
 
 	if(curr_state == STATE_ATTACK_RANDOM){
 
 		unsigned short* res = ai_attack_random(board, board_len, history_board, ships_left);
-		if(res[3] != POS_EMPTY)
+
+		unsigned short hit_row = res[0];
+		unsigned short hit_col = res[1];
+		unsigned short hit_direction = res[2];
+
+		first_attack[0] = hit_row;
+		first_attack[1] = hit_col;
+		last_attack[0] = hit_row;
+		last_attack[1] = hit_col;
+		direction = hit_direction;
+		attack_target = res[3];
+
+		if(attack_target != POS_EMPTY){
+
+			curr_state = STATE_DECIDE_DIRECTION;
+			shots_on_target ++;
+
+		}
+		ai_register_hit(last_attack, attack_target, board, board_len, history_board, ships_left, shots_on_target);
+
+		delete [] res;
+
+
 	}
+
+	else if(curr_state == STATE_DECIDE_DIRECTION){
+
+		unsigned short* attack_pos = new unsigned short[2];
+		unsigned short hit;
+
+		if(direction == 0 && last_attack[1] < board_len - 1){
+
+			last_attack[1] ++;
+			attack_pos[0] = last_attack[0];
+			attack_pos[1] = last_attack[0];
+
+			hit = ai_hit(board, board_len, last_attack);
+
+			if(hit != POS_EMPTY && hit == attack_target){
+
+				curr_state = STATE_ATTACK_HORIZONTAL;
+				direction = 0;
+			}
+
+			else{
+
+				direction = 1;
+				last_attack[1] --;
+			}
+		}
+
+		else if(direction == 1 && last_attack[1] > 0){
+
+			last_attack[1] --;
+			attack_pos[0] = last_attack[0];
+			attack_pos[1] = last_attack[0];
+
+			hit = ai_hit(board, board_len, last_attack);
+
+			if(hit != POS_EMPTY && hit == attack_target){
+
+				curr_state = STATE_ATTACK_HORIZONTAL;
+				direction = 1;
+			}
+
+			else{
+
+				direction = 2;
+				last_attack[1] ++;
+			}
+		}
+
+		else if(direction == 2 && last_attack[0] > 0){
+
+			last_attack[0] --;
+			attack_pos[0] = last_attack[0];
+			attack_pos[1] = last_attack[0];
+
+			hit = ai_hit(board, board_len, last_attack);
+
+			if(hit != POS_EMPTY && hit == attack_target){
+
+				curr_state = STATE_ATTACK_VERTICAL;
+				direction = 2;
+			}
+
+			else{
+
+				direction = 3;
+				last_attack[0] ++;
+			}
+		}
+
+		else if(direction == 3 && last_attack[0] < board_len-1){
+
+			last_attack[0] ++;
+			attack_pos[0] = last_attack[0];
+			attack_pos[1] = last_attack[0];
+
+			hit = ai_hit(board, board_len, last_attack);
+
+			if(hit != POS_EMPTY && hit == attack_target){
+
+				curr_state = STATE_ATTACK_HORIZONTAL;
+				direction = 3;
+			}
+
+			else{
+
+				direction = 2;
+				last_attack[0] --;
+			}
+		}
+
+		ai_register_hit(attack_pos, hit, board, board_len, history_board, ships_left, shots_on_target);
+
+		delete [] attack_pos;
+	}
+
+	else if(curr_state == STATE_ATTACK_HORIZONTAL){
+
+		unsigned short hit;
+
+		if(direction == 0){
+
+			if(last_attack[1] == board_len-1){
+
+				last_attack[1] = first_attack[1] --;
+				direction = 1;
+				hit = ai_hit(board, board_len, last_attack);
+			}
+
+			else{
+
+				last_attack[1] ++;
+				hit = ai_hit(board, board_len, last_attack);
+				if(hit != attack_target) direction = 1;
+			}
+		}
+
+		else{
+
+			if(last_attack[1] == 0){
+
+				last_attack[1] = first_attack[1] ++;
+				direction = 0;
+				hit = ai_hit(board, board_len, last_attack);
+			}
+
+			else{
+
+				last_attack[1] --;
+				hit = ai_hit(board, board_len, last_attack);
+				if(hit != attack_target) direction = 0;
+			}
+		}
+
+		ai_register_hit(last_attack, hit, board, board_len, history_board, ships_left, shots_on_target);
+
+	}
+
+	else if(curr_state == STATE_ATTACK_VERTICAL){
+
+		unsigned short hit;
+
+		if(direction == 2){
+
+			if(last_attack[0] == board_len-1){
+
+				last_attack[0] = first_attack[0] --;
+				direction = 3;
+				hit = ai_hit(board, board_len, last_attack);
+			}
+
+			else{
+
+				last_attack[0] ++;
+				hit = ai_hit(board, board_len, last_attack);
+				if(hit != attack_target) direction = 3;
+			}
+		}
+
+		else{
+
+			if(last_attack[0] == 0){
+
+				last_attack[0] = first_attack[0] ++;
+				direction = 2;
+				hit = ai_hit(board, board_len, last_attack);
+			}
+
+			else{
+
+				last_attack[0] --;
+				hit = ai_hit(board, board_len, last_attack);
+				if(hit != attack_target) direction = 2;
+			}
+		}
+
+		ai_register_hit(last_attack, hit, board, board_len, history_board, ships_left, shots_on_target);
+	}
+
+
 }
 
 unsigned short* ai_attack_random(unsigned short** board, unsigned short board_len, unsigned short** history_board, unsigned short* ships_left){
 
 	unsigned short fit_ship_id = 0;
-	for(int i=0; i<SHIPS_AMOUNT; i++){
+	for(int i=SHIPS_AMOUNT-1; i>=0; i--){
 
 		if(ships_left[i] != 0){
 
@@ -457,6 +719,7 @@ unsigned short* ai_attack_random(unsigned short** board, unsigned short board_le
 	}
 
 	unsigned short* pos_to_attack = fit_array(history_board, board_len, fit_ship_id, BOARD_STATUS_HIDDEN);
+	cout << "got pos to attack" << endl;
 	unsigned short row = pos_to_attack[0];
 	unsigned short col = pos_to_attack[1];
 
@@ -472,6 +735,7 @@ unsigned short* ai_attack_random(unsigned short** board, unsigned short board_le
 	res[2] = pos_to_attack[2];
 	res[3] = hit;
 
+	delete [] pos_to_attack;
 	return res;
 
 }
@@ -493,13 +757,51 @@ unsigned short ai_hit(unsigned short** board, unsigned short board_len, unsigned
 
 	return board[row][col];
 
+}
 
+void ai_register_hit(unsigned short* pos, unsigned short hit, unsigned short** board, unsigned short board_len, unsigned short** history_board, unsigned short* ships_left, unsigned short shots_on_target){
+
+	unsigned short row = pos[0];
+	unsigned short col = pos[1];
+
+	history_board[row][col] = hit;
+
+	if(hit != POS_EMPTY){
+
+		board[row][col] = BOARD_STATUS_HIT;
+	}
+
+	bool final = false;
+
+	if(shots_on_target == SHIP_LEN[hit]) final = true;
+
+	if(final){
+
+		cout << "The Computer destroyed a " << SHIP_NAME[hit] << endl;
+		ships_left[hit] --;
+		AI_REFRESH = true;
+		for(int i=0; i<SHIPS_AMOUNT; i++){
+
+			if(ships_left[i] != 0) return;
+		}
+
+		
+		print_message_game_over(COMPUTER_ID);
+	}
 
 }
 void print_board(unsigned short** board, unsigned short board_len){
 
+	cout << "   ";
 	for(int i=0; i<board_len; i++){
 
+		cout << i+1 << " ";;
+	}
+
+	cout << endl;
+	for(int i=0; i<board_len; i++){
+
+		cout << char('A' + i )<< "| ";
 		for(int j=0; j<board_len; j++){
 
 			if(board[i][j] == POS_EMPTY){
@@ -507,7 +809,7 @@ void print_board(unsigned short** board, unsigned short board_len){
 				cout << "_ ";
 			}
 
-			else if(board[i][j] == BOARD_STATUS_HIDDEN){
+			else if(board[i][j] == BOARD_STATUS_HIDDEN || board[i][j] == BOARD_STATUS_HIT){
 
 				cout << "X ";
 			}
