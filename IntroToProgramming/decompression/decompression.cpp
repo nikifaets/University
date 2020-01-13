@@ -3,13 +3,13 @@
 
 using namespace std;
 
-void decompress(char* input, int *input_it, char* res, int *res_it, int *res_len);
+char* decompress(char* input, int *input_it, char* res, int *res_it, int *res_len);
 int read_num(char* input, int *it);
 
 char* get_new_buffer(char* buffer, int old_len, int new_len){
 
 
-	char* temp[new_len];
+	char temp[new_len];
 	
 	memcpy(temp, buffer, sizeof(char)*old_len);
 
@@ -17,6 +17,12 @@ char* get_new_buffer(char* buffer, int old_len, int new_len){
 	
 	memcpy(buffer, temp, sizeof(char)*new_len);
 
+	cout << "temp buffer " << endl;
+	for(int i=0; i<old_len; i++){
+
+		cout << temp[i] << " ";
+	} 
+	cout << endl;
 	return buffer;
 }
 
@@ -54,21 +60,23 @@ int main(){
 	int res_len = buffer_len;
 	char* res = new char[buffer_len];
 
-	decompress(buffer, &input_it, res, &res_it, &res_len);
+	res = decompress(buffer, &input_it, res, &res_it, &res_len);
 
-	for(int i=0; i<res_len; i++){
+	delete[] buffer;
+
+	for(int i=0; i<res_len && res[i] >= 'A' && res[i] <= 'Z'; i++){
 
 		cout << res[i] << " ";
 	}
 
 	cout << endl;
+
+	delete[] res;
 }
 
-void decompress(char* input, int *input_it, char* res, int *res_it, int *res_len){
+char* decompress(char* input, int *input_it, char* res, int *res_it, int *res_len){
 
 	while(input[*input_it] != '\n' && input[*input_it] != ')'){
-
-
 
 		char curr = input[*input_it];
 
@@ -76,13 +84,15 @@ void decompress(char* input, int *input_it, char* res, int *res_it, int *res_len
 
 			int num = read_num(input, input_it);
 
+			// loop num-1 times to copy the string without incrementing the input irerator
 			for(int i=0; i<num-1; i++){
 
 				int static_it = *input_it;
-				decompress(input, &static_it, res, res_it, res_len);
+				res = decompress(input, &static_it, res, res_it, res_len);
 			} 
 
-			decompress(input, input_it, res, res_it, res_len);
+			//last call is to copy one more time but also to increase the input string iterator
+			res = decompress(input, input_it, res, res_it, res_len);
 
 		}
 
@@ -102,7 +112,7 @@ void decompress(char* input, int *input_it, char* res, int *res_it, int *res_len
 		(*input_it) ++;
 	}
 
-	return;
+	return res;
 }
 
 int read_num(char* input, int *it){
