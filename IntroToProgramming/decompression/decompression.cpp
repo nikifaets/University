@@ -17,12 +17,6 @@ char* get_new_buffer(char* buffer, int old_len, int new_len){
 	
 	memcpy(buffer, temp, sizeof(char)*new_len);
 
-	cout << "temp buffer " << endl;
-	for(int i=0; i<old_len; i++){
-
-		cout << temp[i] << " ";
-	} 
-	cout << endl;
 	return buffer;
 }
 
@@ -53,7 +47,6 @@ int main(){
 		} 
 	}
 
-	cout << buffer << endl;
 
 	int input_it = 0;
 	int res_it = 0;
