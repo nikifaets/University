@@ -47,6 +47,7 @@ int main(){
 		} 
 	}
 
+
 	int input_it = 0;
 	int res_it = 0;
 	int res_len = buffer_len;
