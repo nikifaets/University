@@ -14,5 +14,5 @@ Suit::Suit(){}
 
 void Suit::print_suit() const{
 
-	std::cout << name << std::endl;
+	std::cout << name;
 }

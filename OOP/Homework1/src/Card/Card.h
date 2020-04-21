@@ -45,6 +45,8 @@ public:
 	char* get_serial_num();
 	Rank get_rank();
 	Suit get_suit();
+	void print_card();
+	char* get_serial();
 
 
 

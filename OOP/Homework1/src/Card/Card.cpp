@@ -28,3 +28,16 @@ Suit Card::get_suit(){
 
 	return suit;
 }
+
+void Card::print_card(){
+
+	get_rank().print_rank();
+	cout << " ";
+	get_suit().print_suit();
+	cout << endl;
+}
+
+char* Card::get_serial(){
+
+	return serial_num;
+}
