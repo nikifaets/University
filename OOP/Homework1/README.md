@@ -1,4 +1,4 @@
-#Build and run:
+Build and run:
 ```
 mkdir build
 cd build
