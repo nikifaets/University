@@ -9,7 +9,7 @@ class Deck{
 	const char* DEFAULT_SERIAL = "123456987";
 	char* serial_num;
 	Card* generate_deck(const int length = DEFAULT_DECK_SIZE);
-	int* generate_random_sequence(const int length);
+	Card* generate_random_set(const int length);
 
 
 public:

@@ -4,7 +4,7 @@
 using namespace std;
 
 
-Card::Card(RankValues r, SuitValues s, char* sn){
+Card::Card(RankValues r, SuitValues s, const char* sn){
 
 	this->rank = ranks[r];
 	this->suit = suits[s];

@@ -14,6 +14,5 @@ Rank::Rank(){}
 
 void Rank::print_rank() const{
 
-	std::cout << value << std::endl;
 	std::cout << name << std::endl;
 }

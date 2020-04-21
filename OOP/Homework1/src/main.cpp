@@ -11,7 +11,7 @@ int main(){
 
 	cout << c.get_serial_num() << endl;
 
-	Deck deck;
+	Deck deck(3, "123");
 	int size = deck.get_size();
 	cout << deck.get_size()<<endl;
 	Card* cards = deck.get_cards();

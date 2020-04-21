@@ -40,7 +40,7 @@ class Card{
 
 public:
 
-	Card(RankValues r, SuitValues s, char* sn);
+	Card(RankValues r, SuitValues s, const char* sn);
 	Card();
 	char* get_serial_num();
 	Rank get_rank();
