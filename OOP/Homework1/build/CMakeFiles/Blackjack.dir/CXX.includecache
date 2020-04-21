@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/nikifaets/code/homeworks/OOP/Homework1/src/Card/Rank.cpp
+Rank.h
+/home/nikifaets/code/homeworks/OOP/Homework1/src/Card/Rank.h
+cstring
+-
+iostream
+-
+
+/home/nikifaets/code/homeworks/OOP/Homework1/src/Card/Rank.h
+

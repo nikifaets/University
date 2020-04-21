@@ -1,0 +1,3 @@
+/home/nikifaets/code/homeworks/OOP/Homework1/build/CMakeFiles/rebuild_cache.dir
+/home/nikifaets/code/homeworks/OOP/Homework1/build/CMakeFiles/Blackjack.dir
+/home/nikifaets/code/homeworks/OOP/Homework1/build/CMakeFiles/edit_cache.dir
