@@ -1,8 +1,10 @@
 Build and run:
 
-mkdir build
-cd build
-cmake..
-make
+\newline
+
+mkdir build \newline
+cd build \newline
+cmake.. \newline
+make \newline
 ./Blackjack
 
