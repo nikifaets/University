@@ -1,10 +1,14 @@
 #pragma once
 
 #include "Rank.h"
+#include "Suit.h"
 
-enum Suit {Hearts, Diamonds, Spades, Clubs};
 
-const Rank ranks[13] = {
+const int RANKS_NUM = 13;
+const int SUITS_NUM = 4;
+
+const Rank ranks[RANKS_NUM] = {
+
 	Rank(Two, "Two"),
 	Rank(Three, "Three"),
 	Rank(Four, "Four"),
@@ -16,9 +20,17 @@ const Rank ranks[13] = {
 	Rank(Ten, "Ten"),
 	Rank(J, "Jack"),
 	Rank(K, "King"),
-	Rank(Q, "Queen").
+	Rank(Q, "Queen"),
 	Rank(A, "Ace")
-	};
+};
+
+const Suit suits[SUITS_NUM] = {
+
+	Suit(Hearts, "Hearts"),
+	Suit(Diamonds, "Diamonds"),
+	Suit(Spades, "Spades"),
+	Suit(Clubs, "Clubs")
+};
 
 class Card{
 
@@ -28,8 +40,11 @@ class Card{
 
 public:
 
-	Card(RankValues r, Suit s, char* sn);
+	Card(RankValues r, SuitValues s, char* sn);
+	Card();
 	char* get_serial_num();
+	Rank get_rank();
+	Suit get_suit();
 
 
 

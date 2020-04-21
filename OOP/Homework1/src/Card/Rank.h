@@ -1,6 +1,6 @@
 #pragma once
 
-enum RankValues {Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, J, Q, K, A};
+enum RankValues {Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, J, K, Q, A};
 
 struct Rank{
 
