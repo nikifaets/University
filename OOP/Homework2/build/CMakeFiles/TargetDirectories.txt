@@ -1,0 +1,3 @@
+/home/nikifaets/code/homeworks/OOP/Homework2/build/CMakeFiles/rebuild_cache.dir
+/home/nikifaets/code/homeworks/OOP/Homework2/build/CMakeFiles/edit_cache.dir
+/home/nikifaets/code/homeworks/OOP/Homework2/build/CMakeFiles/SocialNet.dir
