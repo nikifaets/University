@@ -1,1 +1,0 @@
-/usr/bin/c++  -g  -rdynamic CMakeFiles/SocialNet.dir/src/Parser/Parser.cpp.o CMakeFiles/SocialNet.dir/src/Platform/Platform.cpp.o CMakeFiles/SocialNet.dir/src/Users/User.cpp.o CMakeFiles/SocialNet.dir/src/main.cpp.o  -o SocialNet 
