@@ -3,17 +3,20 @@
 #include <iostream>
 #include <string>
 
-enum Rank {User, Moderator, Admin};
+enum Rank {USER, MODERATOR, ADMIN};
 
 class User{
 
-	const int USER_ID;
 	std::string name;
-	Rank rank = Rank::User;
 
 	public:
 
-	User(int id, std::string name, Rank rank) : USER_ID(id), name(name), rank(rank){}
-	
+	const Rank RANK = Rank::USER;
+	const int USER_ID;
+	const int AGE;
+
+	User(int id, std::string name, int age, Rank rank);
+	std::string get_name() const;
+	bool operator == (const User& other) const;
 
 };

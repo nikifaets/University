@@ -1,14 +1,15 @@
 #include "Parser/Parser.h"
+#include "Platform/Platform.h"
 
-void foo(int a){
-
-    ;
-}
 
 int main(){
 
+    for(int i=0; i<5; i++){
 
-    Parser parser;
+        Platform::add_user("Mama", "Gosho", i);
+        Platform::add_moderator("Tate", "Pesho", i);
+    }
+
+    Platform::show_info();
     
-    //void (*ptr)(int, int) = Parser::dic["add_user"];
 }
