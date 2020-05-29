@@ -17,6 +17,9 @@ class User{
 
 	User(int id, std::string name, int age, Rank rank);
 	std::string get_name() const;
+	void set_name(std::string new_name);
 	bool operator == (const User& other) const;
+	bool operator == (const User* other) const;
+	User operator = (const User& other) const;
 
 };

@@ -18,8 +18,8 @@ User UserFactory::create_moderator(std::string name, int age){
     return User(free_id, name, age, Rank::MODERATOR);
 }
 
-User UserFactory::create_admin(std::string name){
+User UserFactory::create_admin(std::string name, int age){
 
     free_id ++;
-    return User(free_id, name, 0, Rank::ADMIN);
+    return User(free_id, name, age, Rank::ADMIN);
 }

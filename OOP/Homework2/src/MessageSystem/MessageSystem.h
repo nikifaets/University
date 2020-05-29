@@ -7,4 +7,5 @@ namespace message{
 
 
     void print_info(std::string desc, int var);
+    void print_string(std::string str);
 }

@@ -10,7 +10,7 @@ class UserFactory{
 
     UserFactory();
     static User create_user(std::string name, int age);
-    static User create_admin(std::string name);
+    static User create_admin(std::string name, int age);
     static User create_moderator(std::string name, int age);
     
 
