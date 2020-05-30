@@ -1,10 +1,6 @@
 #include "UserFactory.h"
 
 int UserFactory::free_id = 0;
-UserFactory::UserFactory(){
-
-    free_id = 0;
-}
 
 User UserFactory::create_user(std::string name, int age){
 
