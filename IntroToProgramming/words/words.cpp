@@ -21,6 +21,7 @@ void to_lowercase(char* word){
     for(int i=0; i<len; i++){
 
         word[i] =  tolower(word[i]);
+        //cout << "To lower " << (char)tolower((word[i])) << endl;
     }
     
 }
@@ -65,11 +66,12 @@ char** add_word(char* input, char** dict, int &dict_len){
     dict = resize_dict(dict, dict_len);
     const size_t new_len = strlen(input);
 
-    char* new_word = new char[new_len+1];
+    char* new_word = new char[new_len];
 
     strcpy(new_word, input);
+
     dict[dict_len-1] = new char[new_len];
-    dict[dict_len-1] = new_word;
+    strcpy(dict[dict_len-1], new_word);
 
     return dict;
 
@@ -108,9 +110,9 @@ int count_occurences(char* str, char** dict, const int dict_len){
     return res;
 }
 
-void print_sorted(char** dict, const int dict_len, char** set, const int set_len){
+void print_sorted(char** dict, const size_t dict_len, char** set, const size_t set_len){
 
-    int str_occurences[set_len];
+    int* str_occurences = new int[set_len];
     memset(str_occurences, 0, sizeof(int)*set_len);
     
     for(int i=0; i<set_len; i++){
@@ -170,6 +172,7 @@ int main(){
 
             if(word_len > 0){
                 
+                word[word_len] = '\0';
                 to_lowercase(word);
 
                 //populate dict with repetitions
@@ -213,6 +216,8 @@ int main(){
     }
 
     delete[] dict;
+
+    return 0;
 
     
 }
