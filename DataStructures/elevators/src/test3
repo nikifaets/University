@@ -1,0 +1,8 @@
+12 10 10 6
+call UP 4 1
+go 9 1
+call UP 4 1 
+go 7 1
+call UP 2 25
+go 4 25
+

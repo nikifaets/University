@@ -1,0 +1,22 @@
+12 10 10 20
+call UP 4 1
+go 9 1
+call UP 4 1 
+go 7 1
+call UP 6 1 
+go 7 1
+call DOWN 5 1 
+go 3 1
+call UP 2 15 
+go 8 15
+call UP 3 30 
+go 7 30
+call DOWN 5 31 
+go 1 31
+call UP 2 35 
+go 5 35
+call UP 2 43 
+go 8 43
+call DOWN 12 44
+go 4 44
+
