@@ -108,6 +108,7 @@ class Experiment:
             if epoch > 2:
                 return
 
+
 if __name__ == '__main__':
     adj_table = {
         'A': {'B': 5, 'C': 10, 'D': 3},
