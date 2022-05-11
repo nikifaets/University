@@ -169,6 +169,7 @@ int main(int argc, char** argv){
         
         ans += new_val.first;
         new_str += new_val.second;
+
     }
 
     cout << ans << endl;
