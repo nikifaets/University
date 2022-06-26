@@ -35,11 +35,13 @@ if __name__ == '__main__':
     test_a = load_corpus(test_a_files)
     test_x = test_s + test_a
     test_y = [0, 0, 0, 0, 1, 1, 1, 1]
-    processed_test = preprocess.build_count_matrix(preprocess.run_analyze_pipeline(test_x), words)
+    processed_test = preprocess.build_count_matrix(
+        preprocess.run_analyze_pipeline(test_x),
+        words)
 
-    #for idx, row in enumerate(processed_test):
-    print(model.model.predict(processed_test), ', expected: ')
+    prediction = model.model.predict(processed_test)
     print(model.model.score(processed_test, test_y))
+    print(f1_score(test_y, prediction))
     
 
 

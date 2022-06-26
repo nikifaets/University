@@ -67,27 +67,26 @@ def remove_stopwords(text, stopwords):
 def remove_punctuation(text):
     return [word for word in text if word not in string.punctuation and word != '—']
 
+
 def run_analyze_pipeline(corpus):
 
-    
     lemmatized = lemmatize_array(corpus)
     print("Lemmatization finished.")
     without_stop_words = [remove_stopwords(text, read_stopwords(data / 'stopwords.txt')) for text in lemmatized]
     without_punctuation = [remove_punctuation(text) for text in without_stop_words]
     return without_punctuation
 
+
 def run_analyze_pipeline_for_text(text):
     
     lemmatizer = nlu.load('bg.lemma')
 
     lemmatized = lemmatize(text, lemmatizer)
-    print(lemmatized)
     without_stop_words = remove_stopwords(lemmatized, read_stopwords(data / 'stopwords.txt'))
-    print(without_stop_words)
     without_punctuation = remove_punctuation(without_stop_words)
-    print(without_punctuation)
-    print("hui")
+
     return ' '.join(without_punctuation)
+
 
 def get_words_set(corpus):
     words = set()
@@ -96,10 +95,10 @@ def get_words_set(corpus):
             words.add(word)
     return words
             
+
 def build_count_matrix(corpus, words = None):
     words_set = words if words != None else sorted(list(get_words_set(corpus)))
-    print("words set")
-    print(words_set)
+
     words_count_per_text = []
 
     for text in corpus:
@@ -115,7 +114,10 @@ def build_count_matrix(corpus, words = None):
     for i in range(len(corpus)):
         matrix_row = []
         for word_idx, word in enumerate(words_set):
-            matrix_row.append(words_count_per_text[i][word] if word in words_count_per_text[i] else 0)
+            matrix_row.append(
+                words_count_per_text[i][word] 
+                if word in words_count_per_text[i] 
+                else 0)
         count_matrix.append(matrix_row)
 
     return count_matrix
@@ -124,9 +126,4 @@ def build_count_matrix(corpus, words = None):
 if __name__ == '__main__':
     
 
-    stopwords = read_stopwords(data / 'stopwords.txt')
-    #split_text_to_chapters(data / 'stojanov' / 'zapiski' / 'zapiski_vastanija.txt', stojanov_zapiski_split_pattern)
-    #read_word_embeddings(data / 'embeddings.vec')
-    #print(lemmatize_array(['Гошо кара червената кола на село и с приятелите обичат да яздат кобилата.']))
-    print(build_count_matrix([['ям', 'лайна', 'магаре'], ['eat', 'shit', 'asshole'], ['lol', 'army', 'arsenal']]))
-    
+    pass

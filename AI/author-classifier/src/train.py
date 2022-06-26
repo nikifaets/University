@@ -4,6 +4,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 import pickle
 from util import load_corpus
+import random
 
 class Model:
     
@@ -64,29 +65,19 @@ if __name__ == '__main__':
     train_x = train_a + train_s
     train_y = [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
 
-    print("train a")
-    print((train_a))
+    train_x, train_y = list(map(list, 
+        zip(*random.sample(
+            list(zip(train_x, train_y)), 
+            len(train_x)))))
+
+
     processed_x = preprocess.run_analyze_pipeline(train_x)
-    print(processed_x)
     words = sorted(list(preprocess.get_words_set(processed_x)))
     matrix = preprocess.build_count_matrix(processed_x, words)
 
     model = MultinomialNB().fit(matrix, train_y)
 
-    print(model.score(matrix, train_y))
     with open('model', 'wb') as f:
         pickle.dump(Model(model, words), f)
 
-    with open('model', 'rb') as f:
-        model_loaded = pickle.load(f)
-
-    test_a = load_corpus(test_a_files)
-    test_s = load_corpus(test_s_files)
-    test_x = test_s + test_a
-    test_processed = preprocess.build_count_matrix(preprocess.run_analyze_pipeline(test_x), model_loaded.words)
-    print(model_loaded.model.predict(test_processed))
-
-
-    #count_vectorizer = CountVectorizer().fit(train_a)
-    #print(count_vectorizer.get_feature_names_out())
 
