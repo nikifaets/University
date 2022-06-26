@@ -71,12 +71,9 @@ def run_analyze_pipeline(corpus):
 
     
     lemmatized = lemmatize_array(corpus)
-    print(lemmatized)
+    print("Lemmatization finished.")
     without_stop_words = [remove_stopwords(text, read_stopwords(data / 'stopwords.txt')) for text in lemmatized]
-    print(without_stop_words)
     without_punctuation = [remove_punctuation(text) for text in without_stop_words]
-    print(without_punctuation)
-    print("hui")
     return without_punctuation
 
 def run_analyze_pipeline_for_text(text):

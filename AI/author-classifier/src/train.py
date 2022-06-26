@@ -3,6 +3,7 @@ import preprocess
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 import pickle
+from util import load_corpus
 
 class Model:
     
@@ -54,15 +55,6 @@ test_a_files = [
 encoding_to_name = {0: 'Stojanov', 1: 'Konstantinov'}
 name_to_encoding = {'Stojanov': 0, 'Konstantinov': 1}
 
-def load_corpus(fnames):
-    text_corpus = []
-
-    for fname in fnames:
-        with open(fname, 'r') as f:
-            text_corpus.append(''.join(f.read().splitlines()))
-
-    return text_corpus
-        
         
 if __name__ == '__main__':
     
